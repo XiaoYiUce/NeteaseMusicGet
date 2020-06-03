@@ -50,21 +50,6 @@ namespace NeteaseMusicGet
 
             Console.WriteLine("您好," + Nickname + "!");
             Core.Core.MusicSearch(symbol,Cookie);
-
-            /*String MusicLink = */
-            Console.WriteLine("如还需下载歌曲，请输入1，否则按任意键退出");
-            String method = Console.ReadLine();
-
-            if (method == "1")
-            {
-                Core.Core.MusicSearch(symbol,Cookie);
-            }
-            else
-            {
-                return;
-            }
-
-
         }
 
         /// <summary>
@@ -137,7 +122,5 @@ namespace NeteaseMusicGet
                 login(symbol);
             }
         }
-
-
     }
 }
