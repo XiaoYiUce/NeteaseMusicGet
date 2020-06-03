@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\XiaoYiUce\\source\\repos\\NeteaseMusicGet\\NeteaseMusicGet\\NeteaseMusicGet.csproj": {}
+    "G:\\SoftwareCode\\NeteaseMusicGet\\NeteaseMusicGet\\NeteaseMusicGet.csproj": {}
   },
   "projects": {
-    "C:\\Users\\XiaoYiUce\\source\\repos\\NeteaseMusicGet\\NeteaseMusicGet\\NeteaseMusicGet.csproj": {
+    "G:\\SoftwareCode\\NeteaseMusicGet\\NeteaseMusicGet\\NeteaseMusicGet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\XiaoYiUce\\source\\repos\\NeteaseMusicGet\\NeteaseMusicGet\\NeteaseMusicGet.csproj",
+        "projectUniqueName": "G:\\SoftwareCode\\NeteaseMusicGet\\NeteaseMusicGet\\NeteaseMusicGet.csproj",
         "projectName": "NeteaseMusicGet",
-        "projectPath": "C:\\Users\\XiaoYiUce\\source\\repos\\NeteaseMusicGet\\NeteaseMusicGet\\NeteaseMusicGet.csproj",
+        "projectPath": "G:\\SoftwareCode\\NeteaseMusicGet\\NeteaseMusicGet\\NeteaseMusicGet.csproj",
         "packagesPath": "C:\\Users\\XiaoYiUce\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\XiaoYiUce\\source\\repos\\NeteaseMusicGet\\NeteaseMusicGet\\obj\\",
+        "outputPath": "G:\\SoftwareCode\\NeteaseMusicGet\\NeteaseMusicGet\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\XiaoYiUce\\AppData\\Roaming\\NuGet\\NuGet.Config",

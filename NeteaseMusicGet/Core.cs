@@ -108,7 +108,7 @@ namespace Core
                         }
                         else
                         {
-                            MusicInfo = MusicInfo + Singer2["name"] + "/";
+                            MusicInfo = MusicInfo + Singer2["name"] + "";
                         }
                     }
                     MusicInfo = MusicInfo + "\r\n";

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XDGDRIlGdIDeW9Kx1zj5i85YxN3Ukf9MRye6wcjsjU4OFvEQn6GkxLgfXFxrZvsDB9OUseGWBjfwoihIs4DRmw==",
+  "dgSpecHash": "LgB1o94aKioUBrtxC1DSGNkxVuz4gsq5xFqnCuEHdxe9i8RqSAToyfSUdLCqDhuOmBG52Uh7PIpEZsO/hIDQpQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\XiaoYiUce\\source\\repos\\NeteaseMusicGet\\NeteaseMusicGet\\NeteaseMusicGet.csproj",
+  "projectFilePath": "G:\\SoftwareCode\\NeteaseMusicGet\\NeteaseMusicGet\\NeteaseMusicGet.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\XiaoYiUce\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\XiaoYiUce\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
