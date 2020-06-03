@@ -18,7 +18,7 @@ namespace Core
         /// <returns>返回值为true或者false</returns>
         static bool IsNumber(string str)
         {
-            System.Text.RegularExpressions.Regex reg1 = new System.Text.RegularExpressions.Regex(@"^[0-29]\d*$");
+            System.Text.RegularExpressions.Regex reg1 = new System.Text.RegularExpressions.Regex(@"^[0-9]\d*$");
             return reg1.IsMatch(str);
         }
 
@@ -132,50 +132,66 @@ namespace Core
             Console.WriteLine("请输入您需要下载的歌曲编号");
             string MusicNumberTemp = Console.ReadLine();
             if(IsNumber(MusicNumberTemp) == true)
-            {
+            {                
                 MusicNumber = Int32.Parse(MusicNumberTemp);
-                JObject json2 = JObject.Parse(List[MusicNumber].ToString());
-                String MusicID = (string)json2["id"];
-                MusicName = (string)json2["name"];
-                SingerName = "";
-                JArray Singer = JArray.Parse(JsonReader["result"]["songs"][MusicNumber]["artists"].ToString());
-                if (Singer.Count == 0)
+                if(-1<MusicNumber)
                 {
-                    SingerName = (string)json2["artists"][0]["name"];
-                }
-                else
-                {
-                    for (int i2 = 0; Singer.Count > i2; ++i2)
+                    if(MusicNumber<30)
                     {
-                        JObject Singer2 = JObject.Parse(Singer[i2].ToString());
-                        if (i2 == Singer.Count-1)
+                        JObject json2 = JObject.Parse(List[MusicNumber].ToString());
+                        String MusicID = (string)json2["id"];
+                        MusicName = (string)json2["name"];
+                        SingerName = "";
+                        JArray Singer = JArray.Parse(JsonReader["result"]["songs"][MusicNumber]["artists"].ToString());
+                        if (Singer.Count == 0)
                         {
-                            SingerName =SingerName+ Singer2["name"];
+                            SingerName = (string)json2["artists"][0]["name"];
                         }
                         else
                         {
-                            SingerName = SingerName + Singer2["name"] + ",";
+                            for (int i2 = 0; Singer.Count > i2; ++i2)
+                            {
+                                JObject Singer2 = JObject.Parse(Singer[i2].ToString());
+                                if (i2 == Singer.Count - 1)
+                                {
+                                    SingerName = SingerName + Singer2["name"];
+                                }
+                                else
+                                {
+                                    SingerName = SingerName + Singer2["name"] + ",";
+                                }
+                            }
+                        }
+
+
+                        Console.WriteLine("歌曲名称:" + MusicName + " 歌曲ID:" + MusicID + " 歌手:" + SingerName);
+                        Console.WriteLine("准备开始下载");
+                        HttpResponseMessage response3 = httpClient.GetAsync(new Uri("http://server2.odtm.tech:3000/song/url?id=" + MusicID)).Result; //获取歌曲信息JSON
+                        JObject JsonReader2 = JObject.Parse(response3.Content.ReadAsStringAsync().Result);
+                        MusicDownloadLink = (string)JsonReader2["data"][0]["url"];
+                        if (MusicDownloadLink == null)
+                        {
+                            Console.WriteLine("无法获取下载地址，请检查您是否有网易云VIP权限或歌曲对应专辑");
+                            Console.WriteLine("请按任意键继续...");
+                            Console.ReadKey();
+                            return;
+                        }
+                        else
+                        {
+                            Console.WriteLine("歌曲下载地址为:" + MusicDownloadLink);
+                            MusicDownload(MusicDownloadLink, MusicName, SingerName, symbol, Cookie);
                         }
                     }
-                }
-                    
-
-                Console.WriteLine("歌曲名称:" + MusicName + " 歌曲ID:" + MusicID + " 歌手:" + SingerName);
-                Console.WriteLine("准备开始下载");
-                HttpResponseMessage response3 = httpClient.GetAsync(new Uri("http://server2.odtm.tech:3000/song/url?id=" + MusicID)).Result; //获取歌曲信息JSON
-                JObject JsonReader2 = JObject.Parse(response3.Content.ReadAsStringAsync().Result);
-                MusicDownloadLink = (string)JsonReader2["data"][0]["url"];
-                if (MusicDownloadLink == null)
-                {
-                    Console.WriteLine("无法获取下载地址，请检查您是否有网易云VIP权限或歌曲对应专辑");
-                    Console.WriteLine("请按任意键继续...");
-                    Console.ReadKey();
-                    return;
+                    else
+                    {
+                        Console.WriteLine("您键入的数值有误!请重新搜索");
+                        MusicSearch(symbol, Cookie);
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("歌曲下载地址为:" + MusicDownloadLink);
-                    MusicDownload(MusicDownloadLink, MusicName, SingerName, symbol,Cookie);
+                    Console.WriteLine("您键入的数值有误!请重新搜索");
+                    MusicSearch(symbol, Cookie);
                 }
             }
             else
