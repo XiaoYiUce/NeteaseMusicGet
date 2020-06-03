@@ -53,7 +53,7 @@ namespace Core
                 FileName = MusicName + "-" + SingerName + ".mp3";
             }
 
-            string SaveDirectory = ProgramRunDirectory + symbol + FileName;
+            string SaveDirectory =  ProgramRunDirectory + symbol +FileName;
             client.DownloadFile(url, SaveDirectory);
             Console.WriteLine("文件已保存至:" + SaveDirectory);
         }
@@ -61,11 +61,11 @@ namespace Core
         ///<summary>
         ///此方法用于检索音乐并执行下载，需填写symbol（平台路径符号）
         ///</summary>
-        public static void MusicSearch(string symbol,string Cookie)
+        public static void MusicSearch(string symbol, string Cookie)
         {
             Console.WriteLine("请输入您要搜索的歌曲名称");
             String SongName = Console.ReadLine();
-            if (SongName == "") 
+            if (SongName == "")
             {
                 Console.WriteLine("请填入正确的关键词!");
                 MusicSearch(symbol, Cookie);
@@ -90,7 +90,30 @@ namespace Core
             for (int i = 0; List.Count > i ; ++i)
             {
                 JObject json = JObject.Parse(List[i].ToString());
-                MusicInfo = MusicInfo + "[" + i + "]"+"曲名:"+json["name"]+" 歌手:"+json["artists"][0]["name"]+"\r\n";
+                JArray Singer = JArray.Parse(JsonReader["result"]["songs"][i]["artists"].ToString());
+                MusicInfo = MusicInfo + "[" + i + "]" + "曲名:" + json["name"] + " 歌手:";
+                if (Singer.Count == 0)
+                {
+                    MusicInfo = MusicInfo + json["artists"][0]["name"] + "\r\n";
+                }
+                else
+                {
+
+                    for (int i2 = 0; Singer.Count > i2; ++i2)
+                    {
+                        JObject Singer2 = JObject.Parse(Singer[i2].ToString());
+                        if(i2 == Singer.Count-1)
+                        {
+                            MusicInfo = MusicInfo + Singer2["name"];
+                        }
+                        else
+                        {
+                            MusicInfo = MusicInfo + Singer2["name"] + "/";
+                        }
+                    }
+                    MusicInfo = MusicInfo + "\r\n";
+                }
+                
             }
             Console.WriteLine(MusicInfo);
             MusicInfo = ""; //清空变量
@@ -102,7 +125,28 @@ namespace Core
                 JObject json2 = JObject.Parse(List[MusicNumber].ToString());
                 String MusicID = (string)json2["id"];
                 MusicName = (string)json2["name"];
-                SingerName = (string)json2["artists"][0]["name"];
+                JArray Singer = JArray.Parse(JsonReader["result"]["songs"][MusicNumber]["artists"].ToString());
+                if (Singer.Count == 0)
+                {
+                    SingerName = (string)json2["artists"][0]["name"];
+                }
+                else
+                {
+                    for (int i2 = 0; Singer.Count > i2; ++i2)
+                    {
+                        JObject Singer2 = JObject.Parse(Singer[i2].ToString());
+                        if (i2 == Singer.Count-1)
+                        {
+                            SingerName =SingerName+ Singer2["name"];
+                        }
+                        else
+                        {
+                            SingerName = SingerName + Singer2["name"] + ",";
+                        }
+                    }
+                }
+                    
+
                 Console.WriteLine("歌曲名称:" + MusicName + " 歌曲ID:" + MusicID + " 歌手:" + SingerName);
                 Console.WriteLine("准备开始下载");
                 HttpResponseMessage response3 = httpClient.GetAsync(new Uri("http://server2.odtm.tech:3000/song/url?id=" + MusicID)).Result; //获取歌曲信息JSON
