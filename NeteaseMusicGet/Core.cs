@@ -29,7 +29,7 @@ namespace Core
         public static string MusicInfo;
         public static int MusicNumber;
 
-        public static void MusicDownload(string url, string MusicName, string SingerName,string symbol) //MusicDownload子程序
+        public static void MusicDownload(string url, string MusicName, string SingerName,string symbol,string Cookie) //MusicDownload子程序
         {
             ///<summary>
             ///此子程序用于下载音乐，第一个值为音乐文件的URL，第二个参数为音乐名称，第三个参数为歌手名称，第四个名称为标识符
@@ -56,6 +56,18 @@ namespace Core
             string SaveDirectory =  ProgramRunDirectory + symbol +FileName;
             client.DownloadFile(url, SaveDirectory);
             Console.WriteLine("文件已保存至:" + SaveDirectory);
+            /*String MusicLink = */
+            Console.WriteLine("如还需下载歌曲，请输入1，否则按任意键退出");
+            String method = Console.ReadLine();
+
+            if (method == "1")
+            {
+                MusicSearch(symbol, Cookie);
+            }
+            else
+            {
+                return;
+            }
         }
 
         ///<summary>
@@ -108,7 +120,7 @@ namespace Core
                         }
                         else
                         {
-                            MusicInfo = MusicInfo + Singer2["name"] + "";
+                            MusicInfo = MusicInfo + Singer2["name"] + "/";
                         }
                     }
                     MusicInfo = MusicInfo + "\r\n";
@@ -125,6 +137,7 @@ namespace Core
                 JObject json2 = JObject.Parse(List[MusicNumber].ToString());
                 String MusicID = (string)json2["id"];
                 MusicName = (string)json2["name"];
+                SingerName = "";
                 JArray Singer = JArray.Parse(JsonReader["result"]["songs"][MusicNumber]["artists"].ToString());
                 if (Singer.Count == 0)
                 {
@@ -162,7 +175,7 @@ namespace Core
                 else
                 {
                     Console.WriteLine("歌曲下载地址为:" + MusicDownloadLink);
-                    MusicDownload(MusicDownloadLink, MusicName, SingerName, symbol);
+                    MusicDownload(MusicDownloadLink, MusicName, SingerName, symbol,Cookie);
                 }
             }
             else
