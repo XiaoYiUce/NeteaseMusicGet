@@ -1,0 +1,15 @@
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\NeteaseMusicGet.exe
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.csprojAssemblyReference.cache
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.AssemblyInfoInputs.cache
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.AssemblyInfo.cs
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\NeteaseMusicGet.deps.json
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\NeteaseMusicGet.runtimeconfig.json
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\NeteaseMusicGet.runtimeconfig.dev.json
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\NeteaseMusicGet.dll
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\NeteaseMusicGet.pdb
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.csproj.CoreCompileInputs.cache
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.csproj.CopyComplete
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.dll
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.pdb
+C:\Users\XiaoYiUce\source\repos\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.genruntimeconfig.cache
