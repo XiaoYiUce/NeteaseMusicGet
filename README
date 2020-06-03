@@ -1,0 +1,14 @@
+NeteaseMusicGet
+
+简介
+个人写的一个网易云下载小工具，需要登录账户（其实可以不登录的，登录只是方便VIP下载VIP曲子），新人练手用的，dalao轻喷()
+
+功能
+网易云音乐下载地址解析
+
+使用的语言
+Client（客户端）:C#
+Server（服务器）:Node.js(感谢@ Binaryify写的NeteaseCloudMusicApi项目)
+
+许可证
+采用Apache LICENSE 2.0许可证开源
