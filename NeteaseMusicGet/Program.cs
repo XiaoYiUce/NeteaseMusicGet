@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Web;
+using static Core.Core;
 
 namespace NeteaseMusicGet
 {
@@ -27,6 +28,7 @@ namespace NeteaseMusicGet
             Console.WriteLine("| \\ | ___ _| |_ ___  ___  ___ ___ |  \\  \\ _ _  ___<_> ___ /  _>  ___ _| |_ ");
             Console.WriteLine("|   |/ ._> | | / ._><_> |<_-</ ._>|     || | |<_-<| |/ | '| <_/\\/ ._> | |  ");
             Console.WriteLine("|_\\_|\\___. |_| \\___.<___|/__/\\___.|_|_|_|`___|/__/|_|\\_|_.`____/\\___. |_| ");
+            Console.WriteLine("[Info]项目GitHub地址:https://github.com/XiaoYiUce/NeteaseMusicGet");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[Info]正在初始化");
             //判断平台
@@ -42,7 +44,6 @@ namespace NeteaseMusicGet
             }
 
             Console.WriteLine("[Info]正在载入配置");
-
             if (File.Exists(Environment.CurrentDirectory + symbol + "config.json") == true) //判断config.json是否存在
             {
                 StreamReader file = File.OpenText(Environment.CurrentDirectory + symbol + "config.json");
@@ -60,10 +61,9 @@ namespace NeteaseMusicGet
                 /*HttpResponseMessage responseinfo = Common.httpClient.GetAsync(httpurl).Result; //访问url并取回数据*/
                 /*var cookie = responseinfo.Headers.GetValues("Set-Cookie");*/
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("您好," + Nickname + "!");
+                Console.WriteLine("[Info]欢迎使用," + Nickname + "!");
             }
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Core.Core.MusicSearch(symbol, Cookie);
+            NeteaseMusicGet();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace NeteaseMusicGet
                 File.WriteAllText(FileSaveDir, JsonConvert.SerializeObject(info)); //序列化并保存JSON
                 Nickname = info.Name;
             }
-            else if(result == "")
+            else if (result == "")
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[Err]网络错误!程序即将退出");
@@ -145,5 +145,29 @@ namespace NeteaseMusicGet
                 login(symbol);
             }
         }
+
+        public static void NeteaseMusicGet()
+        {
+            Console.WriteLine("[Info]输入\"help\"获取帮助");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            string operate = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            if (operate == "search")
+            {
+                MusicSearch(symbol, Cookie);
+            }
+            else if(operate == "listget")
+            {
+
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[Err]没有找到对应的指令，输入help获取帮助");
+                Console.ForegroundColor = ConsoleColor.Green;
+                NeteaseMusicGet();
+            }
+        }
+
     }
 }
