@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Web;
 using static Core.Core;
@@ -20,6 +21,7 @@ namespace NeteaseMusicGet
         public static string symbol;
         public static string Cookie;
         public static string Nickname;
+        public static long id;
 
         static void Main(string[] args)
         {
@@ -51,6 +53,7 @@ namespace NeteaseMusicGet
                 JObject jsonObject = (JObject)JToken.ReadFrom(reader);
                 Cookie = (string)jsonObject["Cookie"];
                 Nickname = (string)jsonObject["Name"];
+                id=(long)jsonObject["ID"];
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("[Info]欢迎回来," + Nickname + "!");
             }
@@ -73,6 +76,7 @@ namespace NeteaseMusicGet
         {
             public string Name { get; set; }
             public string Cookie { get; set; }
+            public long ID { get; set; }
         }
 
         /// <summary>
@@ -127,9 +131,11 @@ namespace NeteaseMusicGet
                 UserInfo info = new UserInfo();
                 info.Name = (string)JsonReader["profile"]["nickname"];
                 info.Cookie = Cookie;
+                info.ID = (long)JsonReader["account"]["id"];
                 string FileSaveDir = Environment.CurrentDirectory + symbol + "config.json";
                 File.WriteAllText(FileSaveDir, JsonConvert.SerializeObject(info)); //序列化并保存JSON
                 Nickname = info.Name;
+                id = info.ID;
             }
             else if (result == "")
             {
@@ -158,7 +164,7 @@ namespace NeteaseMusicGet
             }
             else if(operate == "listget")
             {
-
+                MusicList(Cookie, id,symbol) ;
             }
             else
             {

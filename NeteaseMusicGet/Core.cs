@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -61,7 +63,6 @@ namespace Core
             client.DownloadFile(url, SaveDirectory);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[Info]文件已保存至:" + SaveDirectory);
-            NeteaseMusicGet.Program.NeteaseMusicGet();
         }
 
         ///<summary>
@@ -145,7 +146,7 @@ namespace Core
                 MusicNumber = Int32.Parse(MusicNumberTemp);
                 if (-1 < MusicNumber)
                 {
-                    if (MusicNumber < 30)
+                    if (MusicNumber < List.Count)
                     {
                         JObject json2 = JObject.Parse(List[MusicNumber].ToString());
                         String MusicID = (string)json2["id"];
@@ -192,6 +193,7 @@ namespace Core
                         {
                             Console.WriteLine("[Info]歌曲下载地址为:" + MusicDownloadLink);
                             MusicDownload(MusicDownloadLink, MusicName, SingerName, symbol, Cookie);
+                            NeteaseMusicGet.Program.NeteaseMusicGet();
                         }
                     }
                     else
@@ -238,27 +240,136 @@ namespace Core
         /// </summary>
         /// <param name="Cookie">身份验证Cookie</param>
         /// <param name="id">用户User ID</param>
-        public static void MusicList(string Cookie,long id)
+        public static void MusicList(string Cookie,long id,string symbol)
         {
             HttpClient httpclient = new HttpClient(); //建立新的HttpClient实例
             httpclient.DefaultRequestHeaders.Add("cookie", Cookie); //请求头加入Cookie
-            httpclient.DefaultRequestHeaders.Add("user - agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0"); //加入UA头
+            string ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0"; //定义UA变量
+            httpclient.DefaultRequestHeaders.Add("user-agent", ua); //加入UA头
             var Uri = new Uri("http://server2.odtm.tech:3000/user/playlist?uid="+id.ToString()); //将网址转为Uri
             HttpResponseMessage response = httpclient.GetAsync(Uri).Result;  //创建一个HttpResponseMessage容器
-            if (response.StatusCode != HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 String MusicListJson = response.Content.ReadAsStringAsync().Result; //获取服务端返回JSON内容
                 JObject Json = JObject.Parse(MusicListJson);
-                if ((int)Json["code"] == 200)
+                if ((int)Json["code"] == 200) //如果服务器返回状态码200，则表示正常
                 {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    int listnumber = Json["playlist"].Count();  //定义ListNumber变量（歌单数量）
+                    for (int i = 0; listnumber > i; ++i) //进行条件循环，定义i为循环次数储存器，当已循环次数小于歌单数量时进行循环操作
+                    {
+                        Console.WriteLine("[Info]["+i+"]"+"歌单名称:"+(string)Json["playlist"][i]["name"]+" 创建者:"+ (string)Json["playlist"][i]["creator"]["nickname"]); //输出歌单信息
+                    }
+                    Console.WriteLine("[Info]请选择您要下载的歌单编号,输入main返回主菜单");
+                    string numbertemp = Console.ReadLine(); //NumberTemp变量用于临时储存用户键入的数据
+                    if (IsNumber(numbertemp) == true)
+                    {
+                        int ListNumber = int.Parse(numbertemp); //定义要下载的歌单编号
+                        long ListID = (long)Json["playlist"][ListNumber]["id"];
+                        var ListInfoUri = new Uri("http://server2.odtm.tech:3000/playlist/detail?id="+ListID.ToString()); //定义歌单详细信息Uri
+                        HttpResponseMessage response1 = httpclient.GetAsync(ListInfoUri).Result;
+                        if(response1.StatusCode == HttpStatusCode.OK) //判断服务器是否正常连接
+                        { 
+                            //如果返回状态码正常，则进行下一步操作
+                            string listinfo = response1.Content.ReadAsStringAsync().Result;
+                            JObject json2 = JObject.Parse(listinfo);
+                            int ServerStatcode = (int)json2["code"];
+                            if(ServerStatcode == 200)
+                            {
+                                Console.WriteLine("[Info]准备下载歌单:"+(string)json2["playlist"]["name"]+" 创建者:"+(string)json2["playlist"]["creator"]["nickname"]);
+                                int MusicNumber = (int)json2["playlist"]["tracks"].Count(); //定义歌单音乐数量变量
+                                Console.WriteLine("[Info]当前歌单共有:" + MusicNumber.ToString() + "首歌");
+                                for (int i = 0; MusicNumber > i; ++i)
+                                {
+                                    SingerName = null;
+                                    string MusicName = (string)json2["playlist"]["tracks"][i]["name"]; //定义歌曲名称变量
+                                    UInt32 MusicID = (UInt32)json2["playlist"]["tracks"][i]["id"]; //定义歌曲的ID
+                                    var SongInfoUri = new Uri("http://server2.odtm.tech:3000/song/url?id=" + MusicID.ToString());
+                                    HttpResponseMessage response3 = httpclient.GetAsync(SongInfoUri).Result;
+                                    string SongDownInfo = response3.Content.ReadAsStringAsync().Result;
+                                    JObject SongDownInfoJson = JObject.Parse(SongDownInfo); //解析下载地址JSON
+                                    string SongDownURL = (string)SongDownInfoJson["data"][0]["url"]; //最终的歌曲下载地址
+                                    int SingerNumber = (int)json2["playlist"]["tracks"][i]["ar"].Count();
+                                    SingerName = null;
+                                    if (SingerNumber == 1) //判断歌手列表内是否只有一位歌手
+                                    {
+                                        //如果是
+                                        SingerName = (string)json2["playlist"]["tracks"][i]["ar"][0]["name"];
+                                    }
+                                    else
+                                    {
+                                        //如果不只有一位
+                                        for (int i2 = 0;SingerNumber>i2;++i2) //i2为循环次数储存变量，当循环次数大于歌手数量，停止循环
+                                        {
+                                            if (i2==SingerNumber-1)
+                                            {
+                                                SingerName = SingerName + (string)json2["playlist"]["tracks"][i]["ar"][i2]["name"];
+                                            }
+                                            else
+                                            {
+                                                SingerName = SingerName+ (string)json2["playlist"]["tracks"][i]["ar"][i2]["name"]+",";
+                                            }
+                                        }
+                                    }
 
+                                    MusicDownload(SongDownURL, MusicName,SingerName,symbol,Cookie);
+
+
+                                }
+
+                                Console.WriteLine("[Info]下载完成，按任意键返回主菜单");
+                                Console.ReadKey();
+                                NeteaseMusicGet.Program.NeteaseMusicGet();
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("[Err]该歌单可能已经被删除");
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("[Info]按任意键返回主菜单");
+                                Console.ReadKey();
+                                NeteaseMusicGet.Program.NeteaseMusicGet();
+                            }
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("[Err]服务器连接失败，错误码:"+response1.StatusCode.ToString());
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("[Info]按任意键返回主菜单");
+                            Console.ReadKey();
+                            NeteaseMusicGet.Program.NeteaseMusicGet();
+                        }
+                    }
+                    else
+                    {
+                        if (numbertemp == "")
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("[Err]请填入正确的编号!");
+                            MusicList(Cookie, id,symbol);
+                        }
+
+                        if (numbertemp.Trim() == string.Empty)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("[Err]请填入正确的编号!");
+                            MusicList(Cookie, id,symbol);
+                        }
+
+                        if(numbertemp == "main")
+                        {
+                            NeteaseMusicGet.Program.NeteaseMusicGet(); //返回主菜单
+                        }
+                    }
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("[Err]服务器返回错误，错误代码:" + (String)Json["code"]);
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Clear();
+                    Console.WriteLine("按任意键继续");
+                    NeteaseMusicGet.Program.NeteaseMusicGet();
                 }
 
             }

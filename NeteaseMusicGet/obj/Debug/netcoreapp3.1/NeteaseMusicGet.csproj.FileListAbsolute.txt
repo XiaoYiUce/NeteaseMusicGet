@@ -5,6 +5,7 @@ G:\SoftwareCode\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\NeteaseM
 G:\SoftwareCode\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\NeteaseMusicGet.dll
 G:\SoftwareCode\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\NeteaseMusicGet.pdb
 G:\SoftwareCode\NeteaseMusicGet\NeteaseMusicGet\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+G:\SoftwareCode\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.csprojAssemblyReference.cache
 G:\SoftwareCode\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.AssemblyInfoInputs.cache
 G:\SoftwareCode\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.AssemblyInfo.cs
 G:\SoftwareCode\NeteaseMusicGet\NeteaseMusicGet\obj\Debug\netcoreapp3.1\NeteaseMusicGet.csproj.CoreCompileInputs.cache
