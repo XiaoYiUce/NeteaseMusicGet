@@ -27,12 +27,16 @@ namespace Core
         public static string MusicInfo;
         public static int MusicNumber;
 
+        ///<summary>
+        ///此方法用于下载音乐
+        ///</summary>
+        ///<param name="Cookie">身份验证Cookie</param>
+        ///<param name="MusicName">歌曲名称</param>
+        ///<param name="SingerName">歌手</param>
+        ///<param name="symbol">判断是在Win环境下还是在类Unix环境</param>
+        ///<param name="url">音乐URL</param>
         public static void MusicDownload(string url, string MusicName, string SingerName, string symbol, string Cookie) //MusicDownload子程序
         {
-            ///<summary>
-            ///此子程序用于下载音乐，第一个值为音乐文件的URL，第二个参数为音乐名称，第三个参数为歌手名称，第四个名称为标识符
-            ///</summary>
-
             WebClient client = new WebClient();
             string ProgramRunDirectory = Environment.CurrentDirectory;
             string patternflac = @"(.*)(\.flac)$";
@@ -52,21 +56,12 @@ namespace Core
             }
 
             string SaveDirectory = ProgramRunDirectory + symbol + FileName;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("[Work]正在下载"+MusicName+"-"+SingerName);
             client.DownloadFile(url, SaveDirectory);
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[Info]文件已保存至:" + SaveDirectory);
-            /*String MusicLink = */
-            Console.WriteLine("[Info]如还需下载歌曲，请输入1，否则按任意键退出");
-            String method = Console.ReadLine();
-
-            if (method == "1")
-            {
-                MusicSearch(symbol, Cookie);
-            }
-            else
-            {
-                return;
-            }
+            NeteaseMusicGet.Program.NeteaseMusicGet();
         }
 
         ///<summary>
@@ -75,7 +70,7 @@ namespace Core
         public static void MusicSearch(string symbol, string Cookie)
         {
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine("[Info]请输入您要搜索的歌曲关键词");
+            Console.WriteLine("[Info]请输入您要搜索的歌曲关键词，输入main返回主菜单");
             String SongName = Console.ReadLine();
             if (SongName == "")
             {
@@ -89,6 +84,12 @@ namespace Core
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[Err]请填入正确的关键词!");
                 MusicSearch(symbol, Cookie);
+            }
+
+            if (SongName == "main")
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                NeteaseMusicGet.Program.NeteaseMusicGet(); //返回主页面
             }
 
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -136,8 +137,8 @@ namespace Core
             Console.WriteLine(MusicInfo);
             Console.ForegroundColor = ConsoleColor.Green;
 
-            MusicInfo = ""; //清空变量
-            Console.WriteLine("[Info]请输入您需要下载的歌曲编号");
+
+            Console.WriteLine("[Info]请输入您需要下载的歌曲编号，输入search回到搜索，main回到主菜单");
             string MusicNumberTemp = Console.ReadLine();
             if (IsNumber(MusicNumberTemp) == true)
             {
@@ -181,6 +182,7 @@ namespace Core
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("[Err]无法获取下载地址，请检查您是否有网易云VIP权限或歌曲对应专辑");
+                            MusicInfo = ""; //清空变量
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("请按任意键继续...");
                             Console.ReadKey();
@@ -195,6 +197,7 @@ namespace Core
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
+                        MusicInfo = ""; //清空变量
                         Console.WriteLine("[Err]您键入的数值有误!请重新搜索");
                         Console.ForegroundColor = ConsoleColor.Green;
                         MusicSearch(symbol, Cookie);
@@ -204,9 +207,21 @@ namespace Core
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("[Err]您键入的数值有误!请重新搜索");
+                    MusicInfo = ""; //清空变量
                     Console.ForegroundColor = ConsoleColor.Green;
                     MusicSearch(symbol, Cookie);
                 }
+            }
+            else if(MusicNumberTemp == "main")
+            {
+                MusicInfo = ""; //清空变量
+                Console.ForegroundColor = ConsoleColor.Green;
+                NeteaseMusicGet.Program.NeteaseMusicGet();
+            }
+            else if(MusicNumberTemp == "search")
+            {
+                MusicInfo = ""; //清空变量
+                MusicSearch(symbol, Cookie);
             }
             else
             {
@@ -216,6 +231,46 @@ namespace Core
                 MusicSearch(symbol, Cookie);
             }
 
+        }
+
+        /// <summary>
+        /// 获取用户歌单并下载
+        /// </summary>
+        /// <param name="Cookie">身份验证Cookie</param>
+        /// <param name="id">用户User ID</param>
+        public static void MusicList(string Cookie,long id)
+        {
+            HttpClient httpclient = new HttpClient(); //建立新的HttpClient实例
+            httpclient.DefaultRequestHeaders.Add("cookie", Cookie); //请求头加入Cookie
+            httpclient.DefaultRequestHeaders.Add("user - agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0"); //加入UA头
+            var Uri = new Uri("http://server2.odtm.tech:3000/user/playlist?uid="+id.ToString()); //将网址转为Uri
+            HttpResponseMessage response = httpclient.GetAsync(Uri).Result;  //创建一个HttpResponseMessage容器
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                String MusicListJson = response.Content.ReadAsStringAsync().Result; //获取服务端返回JSON内容
+                JObject Json = JObject.Parse(MusicListJson);
+                if ((int)Json["code"] == 200)
+                {
+
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("[Err]服务器返回错误，错误代码:" + (String)Json["code"]);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Clear();
+                }
+
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[Err]无法连接服务器，返回状态码:"+response.StatusCode.ToString());
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("[Info]请按任意键继续");
+                Console.ReadKey();
+                return;
+            }
         }
     }
 
