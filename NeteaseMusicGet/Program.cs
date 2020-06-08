@@ -16,7 +16,6 @@ namespace NeteaseMusicGet
     class Program
     {
         public static string username;
-        public static string password;
         public static string url;
         public static string symbol;
         public static string Cookie;
@@ -91,17 +90,66 @@ namespace NeteaseMusicGet
             {
                 Console.WriteLine("[Info]请输入您的邮箱账号");
                 username = Console.ReadLine();
-                Console.WriteLine("[Info]请输入您的密码");
-                password = HttpUtility.HtmlEncode(Console.ReadLine());
+                Console.WriteLine("[Info]请输入您的密码（密码无回显）");
+                string password = null;
+                while (true)
+                {
+                    ConsoleKeyInfo writekey = Console.ReadKey(true);
+                    if (writekey.Key != ConsoleKey.Enter)
+                    {
+                        if (writekey.Key != ConsoleKey.Backspace)
+                        {
+                            //将用户输入的字符存入字符串中
+                            password = password+writekey.KeyChar.ToString();
+                            //将用户输入的字符替换为
+                            Console.Write("");
+                        }
+                        else
+                        {
+                            //删除错误的字符
+                            Console.Write("\b \b");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        break;
+                    }
+                }
+
                 url = "http://server2.odtm.tech:3000/login?email=" + username + "&password=" + password;
             }
             else if (method == 2)//如果所选模式为2
             {
                 Console.WriteLine("[Info]请输入您的中国大陆手机号");
                 String phonenumber = Console.ReadLine();
-                Console.WriteLine("[Info]请输入您的密码");
-                String password = HttpUtility.HtmlEncode(Console.ReadLine());
-                url = "http://server2.odtm.tech:3000/login/cellphone?phone=" + phonenumber + "&password=" + password;
+                Console.WriteLine("[Info]请输入您的密码（密码无回显）");
+                string password = null;
+                while (true)
+                {
+                    ConsoleKeyInfo writekey = Console.ReadKey(true);
+                    if (writekey.Key != ConsoleKey.Enter)
+                    {
+                        if (writekey.Key != ConsoleKey.Backspace)
+                        {
+                            //将用户输入的字符存入字符串中
+                            password = password + writekey.KeyChar.ToString();
+                            //将用户输入的字符替换为空
+                            Console.Write("");
+                        }
+                        else
+                        {
+                            //删除错误的字符
+                            Console.Write("\b \b");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        break;
+                    }
+                }
+                url = "http://server2.odtm.tech:3000/login/cellphone?phone=" + phonenumber + "&password=" + HttpUtility.HtmlEncode(password);
             }
             else
             {
