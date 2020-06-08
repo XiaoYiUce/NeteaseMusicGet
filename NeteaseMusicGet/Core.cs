@@ -18,8 +18,26 @@ namespace Core
         /// <returns>返回值为true或者false</returns>
         static bool IsNumber(string str)
         {
-            System.Text.RegularExpressions.Regex reg1 = new System.Text.RegularExpressions.Regex(@"^[0-9]\d*$");
+            System.Text.RegularExpressions.Regex reg1 = new Regex(@"^[0-9]\d*$");
             return reg1.IsMatch(str);
+        }
+
+        /// <summary>
+        /// 匹配文件名中是否有不允许存在的符号
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        private static bool FileNameCheck(string fileName)
+        {
+            Regex NameCheck = new Regex("[< > / \\ |: \" ?  *]"); //定义一个正则表达式
+            if(fileName == null)
+            {
+                return (false);
+            }
+            else
+            {
+                return NameCheck.IsMatch(fileName);
+            }
         }
 
         public static string FileName;
@@ -41,6 +59,41 @@ namespace Core
         {
             WebClient client = new WebClient();
             string ProgramRunDirectory = Environment.CurrentDirectory;
+
+            if(url == null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[Err]无法获取这首歌的下载地址，请检查您的账号权限");
+                Console.ForegroundColor = ConsoleColor.Green;
+                return;
+            }
+
+            if(FileNameCheck(MusicName) == true)
+            {
+                //如果匹配到对应字符
+                MusicName=MusicName.Replace("<", "");
+                MusicName=MusicName.Replace(">", "");
+                MusicName=MusicName.Replace("/", "");
+                MusicName=MusicName.Replace("\\", "");
+                MusicName=MusicName.Replace("|", "");
+                MusicName=MusicName.Replace(":", "");
+                MusicName=MusicName.Replace("\"", "");
+                MusicName=MusicName.Replace("*", "");
+            }
+
+            if (FileNameCheck(SingerName) == true)
+            {
+                //如果匹配到对应字符
+                SingerName=SingerName.Replace("<", "");
+                SingerName=SingerName.Replace(">", "");
+                SingerName=SingerName.Replace("/", "");
+                SingerName=SingerName.Replace("\\", "");
+                SingerName=SingerName.Replace("|", "");
+                SingerName=SingerName.Replace(":", "");
+                SingerName=SingerName.Replace("\"", "");
+                SingerName=SingerName.Replace("*", "");
+            }
+
             string patternflac = @"(.*)(\.flac)$";
             string patternncm = @"(.*)(\.ncm)$";
             string patternmp3 = @"(.*)(\.mp3)$";
@@ -57,9 +110,9 @@ namespace Core
                 FileName = MusicName + "-" + SingerName + ".mp3";
             }
 
-            string SaveDirectory = ProgramRunDirectory + symbol + FileName;
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("[Work]正在下载"+MusicName+"-"+SingerName);
+            string SaveDirectory = ProgramRunDirectory + symbol + FileName;
             client.DownloadFile(url, SaveDirectory);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[Info]文件已保存至:" + SaveDirectory);
