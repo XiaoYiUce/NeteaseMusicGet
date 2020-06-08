@@ -166,6 +166,18 @@ namespace NeteaseMusicGet
             {
                 MusicList(Cookie, id,symbol) ;
             }
+            else if(operate == "exit")
+            {
+                return;
+            }
+            else if(operate == "help")
+            {
+                Console.WriteLine("NeteaseMusicGet帮助菜单");
+                Console.WriteLine("search 搜索音乐并进行下载");
+                Console.WriteLine("listget 获取您创建/收藏的歌单并进行批量下载");
+                Console.WriteLine("help 获取帮助");
+                Console.WriteLine("exit 退出");
+            }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
